@@ -4,7 +4,7 @@ from typing import Callable
 
 
 
-def print_dice(d: IDiceStats) -> None:
+def print_counts(d: IDiceStats) -> None:
 	print(d)
 	for n in range(1, d.get_max()+1):
 		count = d.get_count(n)
@@ -45,16 +45,8 @@ def eval_dice(cmd: str) -> IDiceStats:
 	return d
 
 
-def table_display(d: IDiceStats) -> None:
-	print_table(d)
-
-
-def matrix_display(d: IDiceStats) -> None:
+def print_matrix(d: IDiceStats) -> None:
 	print(d.get_matrix())
-
-
-def count_display(d: IDiceStats) -> None:
-	print_dice(d)
 
 
 def repl():
@@ -64,15 +56,15 @@ def repl():
 
 	CommandType = Callable[[IDiceStats], None]
 	display_map: dict[str, CommandType] = {
-		'table': table_display,
-		't': table_display,
-		'matrix': matrix_display,
-		'm': matrix_display,
-		'counts': count_display,
-		'c': count_display,
+		'table': print_table,
+		't': print_table,
+		'matrix': print_matrix,
+		'm': print_matrix,
+		'counts': print_counts,
+		'c': print_counts,
 	}
 
-	curr_display: CommandType = table_display
+	curr_display: CommandType = print_table
 	while True:
 		cmd = input('> ')
 		match cmd:
