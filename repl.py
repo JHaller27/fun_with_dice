@@ -4,6 +4,12 @@ from typing import Callable
 
 
 
+def eval_dice(cmd: str) -> IDiceStats:
+	sizes = [int(x.strip()) for x in cmd.split()]
+	d = reduce(lambda x, y: x+y, map(DieStats, sizes))
+	return d
+
+
 def print_counts(d: IDiceStats) -> None:
 	print(d)
 	for n in range(1, d.get_max()+1):
@@ -26,12 +32,6 @@ def print_table(d: IDiceStats) -> None:
 		print()
 
 	print()
-
-
-def eval_dice(cmd: str) -> IDiceStats:
-	sizes = [int(x.strip()) for x in cmd.split()]
-	d = reduce(lambda x, y: x+y, map(DieStats, sizes))
-	return d
 
 
 def print_matrix(d: IDiceStats) -> None:
