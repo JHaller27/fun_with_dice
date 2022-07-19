@@ -12,9 +12,8 @@ def _dot_sum(a: np.ndarray, b: np.ndarray) -> np.ndarray:
 	bm = np.array([b1, b])
 
 	rm: np.ndarray = am.dot(bm)
-	r = rm.flatten()
 
-	return r
+	return rm
 
 
 class IDiceStats:
@@ -34,6 +33,9 @@ class IDiceStats:
 		raise NotImplementedError
 
 	def get_array(self) -> np.ndarray:
+		raise NotImplementedError
+
+	def get_matrix(self) -> np.ndarray:
 		raise NotImplementedError
 
 	def get_max(self) -> int:
@@ -67,6 +69,9 @@ class DieStats(IDiceStats):
 	def get_array(self) -> np.ndarray:
 		return np.arange(1, self._size+1)
 
+	def get_matrix(self) -> np.ndarray:
+		return self.get_array()
+
 	def get_max(self) -> int:
 		return max(self.get_array())
 
@@ -85,3 +90,6 @@ class MultipleDiceStats(DieStats):
 
 	def get_array(self) -> np.ndarray:
 		return self._stat_array.flatten()
+
+	def get_matrix(self) -> np.ndarray:
+		return self._stat_array

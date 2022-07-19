@@ -1,5 +1,6 @@
 from functools import reduce
 from dice_stats import IDiceStats, DieStats
+from typing import Callable
 
 
 
@@ -38,10 +39,16 @@ def main():
 	print_table(c)
 
 
-def handle_dice_cmd(cmd: str) -> None:
+def table_cmd(cmd: str) -> None:
 	sizes = [int(x.strip()) for x in cmd.split()]
 	d = reduce(lambda x, y: x+y, map(DieStats, sizes))
 	print_table(d)
+
+
+def matrix_cmd(cmd: str) -> None:
+	sizes = [int(x.strip()) for x in cmd.split()]
+	d = reduce(lambda x, y: x+y, map(DieStats, sizes))
+	print(d.get_matrix())
 
 
 def repl():
@@ -49,14 +56,26 @@ def repl():
 
 	dice_regex = re.compile(r'\d+(\s+\d+)*')
 
+	CommandType = Callable[[str], None]
+	cmd_map: dict[str, CommandType] = {
+		'table': table_cmd,
+		't': table_cmd,
+		'matrix': matrix_cmd,
+		'm': matrix_cmd,
+	}
+
+	curr_cmd: CommandType = table_cmd
 	while True:
 		cmd = input('> ')
 		match cmd:
 			case 'q' | 'exit':
 				return
 
+			case _ if new_cmd := cmd_map.get(cmd):
+				curr_cmd = new_cmd
+
 			case _ if m := dice_regex.fullmatch(cmd):
-				handle_dice_cmd(cmd)
+				curr_cmd(cmd)
 
 
 repl()
