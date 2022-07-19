@@ -28,17 +28,6 @@ def print_table(d: IDiceStats) -> None:
 	print()
 
 
-def main():
-	b = DieStats(4)
-	print_table(b)
-
-	a = DieStats(20)
-	print_table(a)
-
-	c = a + b
-	print_table(c)
-
-
 def eval_dice(cmd: str) -> IDiceStats:
 	sizes = [int(x.strip()) for x in cmd.split()]
 	d = reduce(lambda x, y: x+y, map(DieStats, sizes))
