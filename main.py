@@ -39,15 +39,17 @@ def main():
 	print_table(c)
 
 
-def table_cmd(cmd: str) -> None:
+def eval_dice(cmd: str) -> IDiceStats:
 	sizes = [int(x.strip()) for x in cmd.split()]
 	d = reduce(lambda x, y: x+y, map(DieStats, sizes))
+	return d
+
+
+def table_display(d: IDiceStats) -> None:
 	print_table(d)
 
 
-def matrix_cmd(cmd: str) -> None:
-	sizes = [int(x.strip()) for x in cmd.split()]
-	d = reduce(lambda x, y: x+y, map(DieStats, sizes))
+def matrix_display(d: IDiceStats) -> None:
 	print(d.get_matrix())
 
 
@@ -56,26 +58,27 @@ def repl():
 
 	dice_regex = re.compile(r'\d+(\s+\d+)*')
 
-	CommandType = Callable[[str], None]
-	cmd_map: dict[str, CommandType] = {
-		'table': table_cmd,
-		't': table_cmd,
-		'matrix': matrix_cmd,
-		'm': matrix_cmd,
+	CommandType = Callable[[IDiceStats], None]
+	display_map: dict[str, CommandType] = {
+		'table': table_display,
+		't': table_display,
+		'matrix': matrix_display,
+		'm': matrix_display,
 	}
 
-	curr_cmd: CommandType = table_cmd
+	curr_display: CommandType = table_display
 	while True:
 		cmd = input('> ')
 		match cmd:
 			case 'q' | 'exit':
 				return
 
-			case _ if new_cmd := cmd_map.get(cmd):
-				curr_cmd = new_cmd
+			case _ if new_cmd := display_map.get(cmd):
+				curr_display = new_cmd
 
 			case _ if m := dice_regex.fullmatch(cmd):
-				curr_cmd(cmd)
+				d = eval_dice(cmd)
+				curr_display(d)
 
 
 repl()
