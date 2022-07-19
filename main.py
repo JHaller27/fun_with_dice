@@ -53,6 +53,10 @@ def matrix_display(d: IDiceStats) -> None:
 	print(d.get_matrix())
 
 
+def count_display(d: IDiceStats) -> None:
+	print_dice(d)
+
+
 def repl():
 	import re
 
@@ -64,6 +68,8 @@ def repl():
 		't': table_display,
 		'matrix': matrix_display,
 		'm': matrix_display,
+		'counts': count_display,
+		'c': count_display,
 	}
 
 	curr_display: CommandType = table_display
